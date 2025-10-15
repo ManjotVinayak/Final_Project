@@ -1,72 +1,56 @@
-import React from 'react';
+import { GitCommit, Clock, User } from "lucide-react";
 
-const commitsData = [
-  {
-    sha: 'a1b2c3d',
-    message: 'Fix: resolved login bug',
-    author: 'Jane Doe',
-    date: '2025-10-10T14:23:00Z',
-    url: 'https://github.com/user/repo/commit/a1b2c3d',
-  },
-  {
-    sha: 'f4e5d6c',
-    message: 'Feat: add signup validation',
-    author: 'John Smith',
-    date: '2025-10-09T11:45:00Z',
-    url: 'https://github.com/user/repo/commit/f4e5d6c',
-  },
-  {
-    sha: '789abc1',
-    message: 'Docs: update README',
-    author: 'Alice Johnson',
-    date: '2025-10-08T09:10:00Z',
-    url: 'https://github.com/user/repo/commit/789abc1',
-  },
-  {
-    sha: '456def7',
-    message: 'Refactor: optimize API calls',
-    author: 'Bob Brown',
-    date: '2025-10-07T16:30:00Z',
-    url: 'https://github.com/user/repo/commit/456def7',
-  },
-  {
-    sha: '123abc4',
-    message: 'Chore: update dependencies',
-    author: 'Charlie Green',
-    date: '2025-10-06T10:00:00Z',
-    url: 'https://github.com/user/repo/commit/123abc4',
-  },
-];
-
-const formatDate = (isoString) => {
-  const options = { year: 'numeric', month: 'short', day: 'numeric' };
-  return new Date(isoString).toLocaleDateString(undefined, options);
-};
-
-const Commits = () => {
+const Commits = ({ commits }) => {
   return (
-    <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Last 5 Commits</h2>
-      <ul className="divide-y divide-gray-200">
-        {commitsData.map(({ sha, message, author, date, url }) => (
-          <li key={sha} className="py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center">
-            <a
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 font-medium hover:underline truncate max-w-xs"
-              title={message}
-            >
-              {message}
-            </a>
-            <div className="text-gray-600 text-sm sm:text-right mt-1 sm:mt-0 space-x-4">
-              <span>{author}</span>
-              <span>{formatDate(date)}</span>
-              <span className="font-mono text-gray-500">{sha.substring(0, 7)}</span>
+    <div className="glass-card rounded-2xl p-6 shadow-2xl bg-white border border-slate-200">
+      <div className="flex items-center gap-3 mb-6">
+        <GitCommit className="w-5 h-5 text-blue-600" />
+        <h3 className="text-lg font-semibold text-slate-900">
+          Recent Commits
+        </h3>
+        <span className="ml-auto text-sm text-slate-500">
+          {commits.length} commits
+        </span>
+      </div>
+
+      <div className="space-y-3">
+        {commits.map((commit, index) => (
+          <div
+            key={commit.id}
+            className="group relative flex items-start gap-4 p-4 rounded-xl bg-slate-50 hover:bg-slate-100 transition-all duration-200 border border-slate-200"
+          >
+            <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+              <GitCommit className="w-4 h-4 text-blue-600" />
             </div>
-          </li>
+
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-slate-900 mb-1 truncate">
+                {commit.message}
+              </p>
+
+              <div className="flex items-center gap-4 text-xs text-slate-500">
+                <div className="flex items-center gap-1">
+                  <User className="w-3 h-3 text-slate-500" />
+                  <span>{commit.author}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-slate-500" />
+                  <span>{commit.timestamp}</span>
+                </div>
+                <code className="px-2 py-0.5 rounded bg-slate-200 text-slate-800 font-mono">
+                  {commit.hash}
+                </code>
+              </div>
+            </div>
+
+            {index === 0 && (
+              <span className="absolute -top-2 -right-2 px-2 py-1 text-xs font-semibold bg-blue-600 text-white rounded-full">
+                Latest
+              </span>
+            )}
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

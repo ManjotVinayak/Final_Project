@@ -1,61 +1,137 @@
-import React from 'react'
+import * as React from "react";
+import { Activity } from "lucide-react";
+import { cn } from "../lib/utils";
 
-export default function Meter({ value = 50, size = 255, label = 'CI/CD Risk' }) {
-  const clamped = Math.max(0, Math.min(100, value))
-  const radius = size / 2 - 15
-  const center = size / 2
-  const startAngle = Math.PI
-  const endAngle = 0
-  const angle = startAngle + (clamped / 100) * (endAngle - startAngle)
-  const needleLength = radius - 20
+const Card = React.forwardRef(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "rounded-lg border border-gray-200 bg-white text-gray-900 shadow-sm",
+      className
+    )}
+    {...props}
+  />
+));
+Card.displayName = "Card";
 
-  const startX = center - radius * Math.cos(startAngle)
-  const startY = center - radius * Math.sin(startAngle)
-  const endX = center - radius * Math.cos(endAngle)
-  const endY = center - radius * Math.sin(endAngle)
+const CardHeader = React.forwardRef(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("flex flex-col space-y-1.5 p-6", className)} {...props} />
+));
+CardHeader.displayName = "CardHeader";
 
-  const x2 = center + needleLength * Math.cos(angle)
-  const y2 = center + needleLength * Math.sin(angle)
+const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
+  <h3
+    ref={ref}
+    className={cn("text-2xl font-semibold leading-none tracking-tight", className)}
+    {...props}
+  />
+));
+CardTitle.displayName = "CardTitle";
+
+const CardDescription = React.forwardRef(({ className, ...props }, ref) => (
+  <p ref={ref} className={cn("text-sm text-gray-500", className)} {...props} />
+));
+CardDescription.displayName = "CardDescription";
+
+const CardContent = React.forwardRef(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+));
+CardContent.displayName = "CardContent";
+
+const CardFooter = React.forwardRef(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("flex items-center p-6 pt-0", className)} {...props} />
+));
+CardFooter.displayName = "CardFooter";
+
+/* ---------------------- PIPELINE STATUS (MAIN COMPONENT) ---------------------- */
+
+const statusConfig = {
+  success: {
+    label: "Healthy",
+    color: "bg-green-500/60",
+    textColor: "text-green-600",
+    description: "All systems operational",
+  },
+  warning: {
+    label: "Warning",
+    color: "bg-yellow-500/60",
+    textColor: "text-yellow-600",
+    description: "Minor issues detected",
+  },
+  error: {
+    label: "Error",
+    color: "bg-red-500/60",
+    textColor: "text-red-600",
+    description: "Action required",
+  },
+  critical: {
+    label: "Critical",
+    color: "bg-rose-600/60",
+    textColor: "text-rose-600",
+    description: "Immediate attention needed",
+  },
+};
+
+const Meter = ({ status = "success", lastUpdated }) => {
+  const config = statusConfig[status];
 
   return (
-    <div className="flex flex-col items-center">
-      <svg width={size} height={size / 2 + 20} viewBox={`0 0 ${size} ${size / 2 + 20}`}>
-        <defs>
-          <linearGradient id="riskGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#e53935" />
-            <stop offset="50%" stopColor="#ffeb3b" />
-            <stop offset="100%" stopColor="#4caf50" />
-          </linearGradient>
-        </defs>
-        <path
-          d={`M ${startX} ${startY} A ${radius} ${radius} 0 0 1 ${endX} ${endY}`}
-          fill="none"
-          stroke="#e5e7eb"
-          strokeWidth="16"
-          strokeLinecap="round"
+    <Card className="p-6 bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300">
+      <div className="flex items-center gap-3 mb-4">
+        <Activity className="h-5 w-5 text-blue-600" />
+        <h3 className="text-lg font-semibold text-gray-900">
+          Pipeline Status
+        </h3>
+      </div>
+
+      <div className="flex items-center gap-4 mb-4">
+        <div className="relative">
+          <div className="h-24 w-24 rounded-full bg-gray-100 flex items-center justify-center">
+            <div
+              className={cn(
+                "h-20 w-20 rounded-full flex items-center justify-center animate-pulse",
+                config.color
+              )}
+            >
+              <div className="h-16 w-16 rounded-full bg-white flex items-center justify-center">
+                <span className={cn("text-2xl font-bold", config.textColor)}>●</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex-1">
+          <div className={cn("text-2xl font-bold mb-1", config.textColor)}>
+            {config.label}
+          </div>
+          <p className="text-sm text-gray-600">
+            {config.description}
+          </p>
+          {lastUpdated && (
+            <p className="text-xs text-gray-500 mt-2">
+              Last updated: {lastUpdated}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div
+          className={cn("h-full transition-all duration-500", config.color)}
+          style={{
+            width:
+              status === "success"
+                ? "100%"
+                : status === "warning"
+                ? "75%"
+                : status === "error"
+                ? "50%"
+                : "25%",
+          }}
         />
-        <path
-          d={`M ${startX} ${startY} A ${radius} ${radius} 0 0 1 ${endX} ${endY}`}
-          fill="none"
-          stroke="url(#riskGradient)"
-          strokeWidth="16"
-          strokeLinecap="round"
-          strokeDasharray={`${clamped} ${100 - clamped}`}
-          pathLength="100"
-        />
-        <line
-          x1={center}
-          y1={center}
-          x2={x2}
-          y2={y2}
-          stroke="#111827"
-          strokeWidth="4"
-          strokeLinecap="round"
-        />
-        <circle cx={center} cy={center} r={6} fill="#111827" />
-      </svg>
-      <div className="text-gray-700 text-sm mt-2">{label}</div>
-      <div className="text-black text-xl font-semibold">{clamped}%</div>
-    </div>
-  )
-}
+      </div>
+    </Card>
+  );
+};
+
+export default Meter;
