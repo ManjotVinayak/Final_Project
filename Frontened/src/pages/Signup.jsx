@@ -24,7 +24,7 @@ const Signup = () => {
     try {
       const res = await API.post('/auth/signup', { name, email, password });
       dispatch(signupSuccess(res.data.user));
-      navigate('/login'); // ✅ redirect to login after signup
+      navigate('/login'); 
     } catch (err) {
       dispatch(signupFailure(err.response?.data?.message || 'Signup failed'));
     }
