@@ -6,7 +6,7 @@ import Commits from '../components/Commits'
 const Dashboard = () => {
   return (
     <div>
-      {/* <Profile /> */}
+      <Profile />
       <Meter />
       <Commits  />
     </div>
