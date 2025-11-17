@@ -9,6 +9,9 @@ import API from '../api/api';
 const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [company, setCompany] = useState('');
+  const [designation, setDesignation] = useState('');
+  const [repoUrlEncode, setRepoUrlEncode] = useState('');
   const [password, setPassword] = useState('');
   const { loading, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -22,9 +25,9 @@ const Signup = () => {
     e.preventDefault();
     dispatch(signupStart());
     try {
-      const res = await API.post('/auth/signup', { name, email, password });
+      const res = await API.post('/auth/signup', { name, email, company, designation,repoUrlEncode, password });
       dispatch(signupSuccess(res.data.user));
-      navigate('/login'); // ✅ redirect to login after signup
+      navigate('/login');
     } catch (err) {
       dispatch(signupFailure(err.response?.data?.message || 'Signup failed'));
     }
@@ -53,6 +56,39 @@ const Signup = () => {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-600 mb-1">Company</label>
+            <input
+              type="text"
+              placeholder="Enter your company"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              required
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-600 mb-1">Designation</label>
+            <input
+              type="text"
+              placeholder="Enter your designation"
+              value={designation}
+              onChange={(e) => setDesignation(e.target.value)}
+              required
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-600 mb-1">Repo URL Encode</label>
+            <input
+              type="number"
+              placeholder="Enter your repo urlencode"
+              value={repoUrlEncode}
+              onChange={(e) => setRepoUrlEncode(e.target.value)}
               required
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
             />

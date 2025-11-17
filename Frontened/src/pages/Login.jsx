@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginStart, loginSuccess, loginFailure, clearError } from '../redux/authSlice';
-
-
 import API from '../api/api';
 
 const Login = () => {
@@ -12,17 +10,18 @@ const Login = () => {
   const { loading, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
- useEffect(() => {
-  dispatch(clearError());
-}, [dispatch]);
+
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(loginStart());
     try {
       const res = await API.post('/auth/login', { email, password });
-      dispatch(loginSuccess(res.data.user)); // backend should send user object
-      navigate('/'); // ✅ redirect after login
+      dispatch(loginSuccess(res.data.user)); 
+      navigate('/dashboard'); 
     } catch (err) {
       dispatch(loginFailure(err.response?.data?.message || 'Login failed'));
     }
@@ -32,6 +31,7 @@ const Login = () => {
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
         <h2 className="text-2xl font-semibold text-center mb-6">Welcome Back</h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-gray-600 mb-1">Email</label>
@@ -44,6 +44,7 @@ const Login = () => {
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
             />
           </div>
+
           <div>
             <label className="block text-gray-600 mb-1">Password</label>
             <input
