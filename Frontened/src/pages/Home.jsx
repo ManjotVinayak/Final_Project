@@ -85,7 +85,13 @@ export default function Home() {
       </div>
 
       {/* Welcome Line */}
-      <div className="text-center mt-10">
+      <div
+        className="text-center mt-10"
+        style={{
+          backgroundImage:
+            'linear-gradient(90deg, oklch(39.8% 0.07 227.392 / 0.12) 0%, oklch(39.8% 0.07 227.392 / 0.08) 60%, transparent 100%)'
+        }}
+      >
         <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-pulse">
           Welcome to Our CI/CD Pipeline Product
         </h1>
@@ -132,7 +138,12 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-indigo-600 text-white text-center py-4 mt-8 rounded-t-2xl">
+      <footer
+        className="text-white text-center py-4 mt-8 rounded-t-2xl"
+        style={{
+          background: 'linear-gradient(90deg, oklch(39.8% 0.07 227.392), #4f46e5)'
+        }}
+      >
         <p>
           © {new Date().getFullYear()} CI/CD Pipeline Product — All Rights
           Reserved
