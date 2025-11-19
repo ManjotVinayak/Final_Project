@@ -14,17 +14,6 @@ const Dashboard = ( {email} ) => {
     }
   }
 
-  const commits = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/github-webhook/all-commits/');
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching commits:', error);
-      return [];
-    }
-  }
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-slate-50">
