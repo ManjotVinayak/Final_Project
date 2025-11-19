@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard.jsx';
 import Login from './pages/Login.jsx';
 import Profile from './pages/Profile.jsx';
 import Signup from './pages/Signup.jsx';
+import MergeActivity from './pages/MergeActivity.jsx';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
 				<Route path="/login" element={<Login />} />
 				<Route path="/profile" element={<Profile />} />
 				<Route path="/signup" element={<Signup />} />
+				<Route path="/merge-activity" element={<MergeActivity />} />
 			</Routes>
 		</BrowserRouter>
   );
