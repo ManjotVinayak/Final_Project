@@ -3,7 +3,7 @@ import Meter from "../components/Meter";
 import Commits from "../components/Commits";
 import Branch from "../components/Branch";
 
-const Branches = ({ branches, repoUrlEncode }) => {
+const Branches = ({ branches, repoName, repoOwner }) => {
     const [activeBranch, setActiveBranch] = useState(
         branches?.[0]?.name || ""
     );
@@ -41,10 +41,11 @@ const Branches = ({ branches, repoUrlEncode }) => {
                     activeBranch === branch.name ? (
                         <div key={branch.name}>
                             {/* Branch Specific Content */}
-                            <Meter status="warning" lastUpdated="Just now" />
+                            {/* <Meter status="warning" lastUpdated="Just now" /> */}
                             <Commits
                                 branch={branch.name}
-                                repoUrlEncode={repoUrlEncode}
+                                repoName={repoName}
+                                repoOwner={repoOwner}
                             />
                             {/* Branch details */}
                             <Branch branch={branch} />

@@ -1,35 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { signupStart, signupSuccess, signupFailure, loginStart, loginSuccess, loginFailure, clearError } from '../redux/authSlice';
+import { signupStart, signupSuccess, signupFailure, clearError } from '../redux/authSlice';
 import API from '../api/api';
-
-
 
 const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
   const [designation, setDesignation] = useState('');
-  const [repoUrlEncode, setRepoUrlEncode] = useState('');
+  const [repoName, setRepoName] = useState('');
+  const [repoOwner, setRepoOwner] = useState('');
   const [password, setPassword] = useState('');
+
   const { loading, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  useEffect(() => {
-  dispatch(clearError());
-}, [dispatch]);
 
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(signupStart());
+
     try {
-      const res = await API.post('/auth/signup', { name, email, company, designation,repoUrlEncode, password });
+      const res = await API.post('/auth/signup', {
+        name,
+        email,
+        company,
+        designation,
+        repoName,
+        repoOwner,
+        password
+      });
+
       dispatch(signupSuccess(res.data.user));
       navigate('/login');
     } catch (err) {
-      dispatch(signupFailure(err.response?.data?.message || 'Signup failed'));
+      dispatch(signupFailure(err.response?.data?.msg || 'Signup failed'));
     }
   };
 
@@ -38,6 +48,7 @@ const Signup = () => {
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
         <h2 className="text-2xl font-semibold text-center mb-6">Create an Account</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+
           <div>
             <label className="block text-gray-600 mb-1">Full Name</label>
             <input
@@ -46,9 +57,10 @@ const Signup = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2"
             />
           </div>
+
           <div>
             <label className="block text-gray-600 mb-1">Email</label>
             <input
@@ -57,9 +69,10 @@ const Signup = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2"
             />
           </div>
+
           <div>
             <label className="block text-gray-600 mb-1">Company</label>
             <input
@@ -68,9 +81,10 @@ const Signup = () => {
               value={company}
               onChange={(e) => setCompany(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2"
             />
           </div>
+
           <div>
             <label className="block text-gray-600 mb-1">Designation</label>
             <input
@@ -79,20 +93,34 @@ const Signup = () => {
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2"
             />
           </div>
+
           <div>
-            <label className="block text-gray-600 mb-1">Repo URL Encode</label>
+            <label className="block text-gray-600 mb-1">Repo Name</label>
             <input
-              type="number"
-              placeholder="Enter your repo urlencode"
-              value={repoUrlEncode}
-              onChange={(e) => setRepoUrlEncode(e.target.value)}
+              type="text"
+              placeholder="Enter your GitHub repo name"
+              value={repoName}
+              onChange={(e) => setRepoName(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2"
             />
           </div>
+
+          <div>
+            <label className="block text-gray-600 mb-1">Repo Owner</label>
+            <input
+              type="text"
+              placeholder="Enter GitHub username (repo owner)"
+              value={repoOwner}
+              onChange={(e) => setRepoOwner(e.target.value)}
+              required
+              className="w-full border border-gray-300 rounded-lg px-3 py-2"
+            />
+          </div>
+
           <div>
             <label className="block text-gray-600 mb-1">Password</label>
             <input
@@ -101,14 +129,14 @@ const Signup = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring focus:ring-blue-200"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
           >
             {loading ? 'Signing up...' : 'Sign Up'}
           </button>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Profile from "../components/Profile";
 import Branches from "./Branches";
 import { useNavigate } from "react-router-dom";
 
@@ -29,7 +28,8 @@ const Dashboard = () => {
         setCommits(commitsJson);
 
         const branchRes = await fetch(
-          `https://gitlab.com/api/v4/projects/${user.repoUrlEncode}/repository/branches`
+          `https://api.github.com/repos/{owner}/{repo}/branches`
+          .replace("{owner}", userJson.repoOwner).replace("{repo}", userJson.repoName)
         );
         const branchJson = await branchRes.json();
         setBranches(branchJson);
@@ -41,7 +41,7 @@ const Dashboard = () => {
     };
 
     if (email) fetchDashboardData();
-  }, [email, user?.repoUrlEncode]);
+  }, [email, user?.repoOwner, user?.repoName]);
 
   if (loading) {
     return (
@@ -66,7 +66,7 @@ const Dashboard = () => {
           </div>
 
           {/* Middle Navigation Links */}
-          <div className="hidden md:flex items-center gap-8 text-slate-600 font-medium">
+          {/* <div className="hidden md:flex items-center gap-8 text-slate-600 font-medium">
             <button className="hover:text-indigo-600 transition" onClick={() => navigate("/merge-requests", { state: { repoUrlEncode: user?.repoUrlEncode } })}>Merge requests</button>
             <button
               className="hover:text-indigo-600 transition"
@@ -75,7 +75,7 @@ const Dashboard = () => {
               Merge Activity
             </button>
 
-          </div>
+          </div> */}
 
           {/* Right Side - User Info */}
           <div className="flex items-center gap-4">
@@ -114,7 +114,7 @@ const Dashboard = () => {
 
         {/* Branch Tabs */}
         <div className="bg-white/70 backdrop-blur-xl shadow-xl rounded-2xl p-6 sm:p-10 hover:shadow-2xl transition-shadow duration-300 border border-white/30">
-          <Branches branches={branches} repoUrlEncode={user?.repoUrlEncode} />
+          <Branches branches={branches} repoOwner={userData?.repoOwner} repoName={userData?.repoName} />
         </div>
 
       </div>
