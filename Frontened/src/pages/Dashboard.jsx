@@ -67,7 +67,7 @@ const Dashboard = () => {
 
           {/* Middle Navigation Links */}
           <div className="hidden md:flex items-center gap-8 text-slate-600 font-medium">
-            {/* <button className="hover:text-indigo-600 transition">Branches</button> */}
+            <button className="hover:text-indigo-600 transition" onClick={() => navigate("/merge-requests", { state: { repoUrlEncode: user?.repoUrlEncode } })}>Merge requests</button>
             <button
               className="hover:text-indigo-600 transition"
               onClick={() => navigate("/merge-activity", { state: { repoUrlEncode: user?.repoUrlEncode } })}
